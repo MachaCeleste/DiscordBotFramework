@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using System;
 
 namespace DiscordBotFramework
 {
@@ -127,6 +128,17 @@ namespace DiscordBotFramework
         public static SocketGuild? GetGuildById(DiscordSocketClient client, ulong id)
         {
             return client.Guilds.FirstOrDefault(x => x.Id == id);
+        }
+
+        /// <summary>
+        /// Get a SocketGuildUser by Id
+        /// </summary>
+        /// <param name="guild"></param>
+        /// <param name="userId"></param>
+        /// <returns>A SocketGuildUser or null</returns>
+        public static SocketGuildUser? GetGuildUserById(SocketGuild guild,  ulong userId)
+        {
+            return guild.Users.FirstOrDefault(x => x.Id == userId);
         }
 
         /// <summary>
