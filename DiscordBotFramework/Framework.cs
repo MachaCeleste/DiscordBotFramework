@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.WebSocket;
 using System.Reflection;
 
@@ -64,11 +64,11 @@ namespace DiscordBotFramework
                 _taskComplete.TrySetResult();
                 await _client.LogoutAsync();
                 await _client.StopAsync();
-                await SystemMessage("Bot disconnected gracefully.");
+                await LoggingAsync(new LogMessage(LogSeverity.Info, "DisconnectAsync", "Bot disconnected gracefully."));
             }
             catch (Exception ex)
             {
-                await SystemMessage($"Error during disconnect: {ex.Message}");
+                await LoggingAsync(new LogMessage(LogSeverity.Error, "DisconnectAsync", "Error during disconnect!", ex));
             }
         }
 
@@ -99,7 +99,7 @@ namespace DiscordBotFramework
                 .Where(t => t.IsSubclassOf(typeof(SlashCommand)) && !t.IsAbstract)
                 .ToList();
             if (commandTypes.Count == 0)
-                await SystemMessage($"No commands found in assembly!");
+                await LoggingAsync(new LogMessage(LogSeverity.Warning, "RegisterCommandsAsync", "No commands found in assembly!"));
             var commands = await _client.Rest.GetGlobalApplicationCommands();
             foreach (var commandType in commandTypes)
             {
@@ -110,19 +110,19 @@ namespace DiscordBotFramework
                     if (!commands.Any(x => x.Name == command.CommandName))
                         await _client.Rest.CreateGlobalCommand(commandProperties);
                     _commands.Add(command);
-                    await SystemMessage($"Registered command: {command.CommandName}");
+                    await LoggingAsync(new LogMessage(LogSeverity.Info, "RegisterCommandsAsync", $"Registered command: {command.CommandName}"));
                 }
                 catch (Exception ex)
                 {
-                    await SystemMessage($"Failed to register command {command.CommandName}: {ex.Message}");
+                    await LoggingAsync(new LogMessage(LogSeverity.Error, "RegisterCommandsAsync", $"Failed to register command {command.CommandName}!", ex));
                 }
             }
-            await SystemMessage("Done!");
+            await LoggingAsync(new LogMessage(LogSeverity.Info, "RegisterCommandsAsync", "Done!"));
         }
 
         private async Task OnReadyAsync()
         {
-            await SystemMessage("Bot connected and ready!");
+            await LoggingAsync(new LogMessage(LogSeverity.Info, "OnReadyAsync", "Bot connected and ready!"));
             if (_wipe)
                 await _client.Rest.DeleteAllGlobalCommandsAsync();
             RegisterCommandsAsync();
@@ -134,12 +134,5 @@ namespace DiscordBotFramework
         /// <param name="msg">Log message</param>
         /// <returns></returns>
         protected abstract Task LoggingAsync(LogMessage msg);
-
-        /// <summary>
-        /// System message output
-        /// </summary>
-        /// <param name="msg">System message</param>
-        /// <returns></returns>
-        protected abstract Task SystemMessage(string msg);
     }
 }
