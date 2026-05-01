@@ -8,6 +8,7 @@
     <Authors>Macha Celeste</Authors>
     <Company>Celestial Corp</Company>
     <Version>1.0.1</Version>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
