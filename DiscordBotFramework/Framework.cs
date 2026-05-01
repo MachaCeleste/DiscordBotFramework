@@ -8,8 +8,8 @@ namespace DiscordBotFramework
     {
         private readonly DiscordSocketClient _client;
         private readonly List<SlashCommand> _commands = new();
-        private IServiceProvider _services;
-        private TaskCompletionSource _taskComplete;
+        private IServiceProvider? _services;
+        private TaskCompletionSource? _taskComplete;
         private bool _wipe = false;
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace DiscordBotFramework
         /// <param name="token">Bot token</param>
         /// <param name="services">Services to expose</param>
         /// <returns></returns>
-        public async Task ConnectAsync(string token, IServiceProvider services = null, bool refresh = false)
+        public async Task ConnectAsync(string token, IServiceProvider? services = null, bool refresh = false)
         {
             if (refresh)
                 _wipe = true;
@@ -61,7 +61,7 @@ namespace DiscordBotFramework
             try
             {
                 _wipe = false;
-                _taskComplete.TrySetResult();
+                _taskComplete?.TrySetResult();
                 await _client.LogoutAsync();
                 await _client.StopAsync();
                 await LoggingAsync(new LogMessage(LogSeverity.Info, "DisconnectAsync", "Bot disconnected gracefully."));
@@ -103,7 +103,7 @@ namespace DiscordBotFramework
             var commands = await _client.Rest.GetGlobalApplicationCommands();
             foreach (var commandType in commandTypes)
             {
-                var command = (SlashCommand)Activator.CreateInstance(commandType);
+                SlashCommand command = (SlashCommand)Activator.CreateInstance(commandType);
                 try
                 {
                     var commandProperties = command.Build();
@@ -125,7 +125,7 @@ namespace DiscordBotFramework
             await LoggingAsync(new LogMessage(LogSeverity.Info, "OnReadyAsync", "Bot connected and ready!"));
             if (_wipe)
                 await _client.Rest.DeleteAllGlobalCommandsAsync();
-            RegisterCommandsAsync();
+            _ = RegisterCommandsAsync();
         }
 
         /// <summary>
