@@ -32,6 +32,7 @@ namespace DiscordBotFramework
 
             _client.Log += LoggingAsync;
             _client.SlashCommandExecuted += HandleCommandAsync;
+            _client.Ready += OnReadyAsync;
         }
 
         /// <summary>
@@ -46,7 +47,6 @@ namespace DiscordBotFramework
                 _wipe = true;
             _services = services;
             _taskComplete = new TaskCompletionSource();
-            _client.Ready += OnReadyAsync;
             await _client.LoginAsync(TokenType.Bot, token);
             await _client.StartAsync();
             await _taskComplete.Task;
@@ -94,6 +94,7 @@ namespace DiscordBotFramework
 
         private async Task RegisterCommandsAsync()
         {
+            _commands.Clear();
             var commandTypes = Assembly.GetEntryAssembly()
                 .GetTypes()
                 .Where(t => t.IsSubclassOf(typeof(SlashCommand)) && !t.IsAbstract)
