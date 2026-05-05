@@ -32,12 +32,8 @@ namespace DiscordBotFramework
                 .WithName(CommandName)
                 .WithDescription(Description);
             if (_params.Count() > 0)
-            {
                 foreach (var param in _params)
-                {
                     commandBuilder.AddOption(param);
-                }
-            }
             return commandBuilder.Build();
         }
     }

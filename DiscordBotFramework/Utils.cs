@@ -54,7 +54,19 @@ namespace DiscordBotFramework
         /// <param name="footer">Fotter of embed</param>
         /// <param name="mentions">Initial message before embed, can mention</param>
         /// <returns>MessageId</returns>
-        public static async Task<ulong> SendEmbedAsync(ISocketMessageChannel channel, string title, string data, uint color = 0xd5a8ff, bool image = true, bool direct = false, IUser? user = null, int time = -1, bool pinned = false, string url = "", string footer = "", string mentions = "")
+        public static async Task<ulong> SendEmbedAsync(
+            ISocketMessageChannel channel,
+            string title,
+            string data,
+            uint color = 0xd5a8ff,
+            bool image = true,
+            bool direct = false,
+            IUser? user = null,
+            int time = -1,
+            bool pinned = false,
+            string url = "",
+            string footer = "",
+            string mentions = "")
         {
             var embed = EmbedWriter(title, data, color, image, user, url, footer);
             var msg = direct ? await user.SendMessageAsync(mentions, false, embed) : await channel.SendMessageAsync(mentions, false, embed);
@@ -81,7 +93,6 @@ namespace DiscordBotFramework
         /// <returns>A fully built embed</returns>
         public static Embed? EmbedWriter(string title, string data, uint color = 0xd5a8ff, bool image = true, IUser? user = null, string url = "", string footer = "")
         {
-
             var embed = new EmbedBuilder();
             embed.WithTitle(title);
             embed.WithUrl(url);
@@ -102,10 +113,8 @@ namespace DiscordBotFramework
         /// <param name="command"></param>
         /// <param name="optionName"></param>
         /// <returns>An object for the option or null</returns>
-        public static object? GetOptionValue(SocketSlashCommand command, string optionName)
-        {
-            return command.Data.Options.FirstOrDefault(x => x.Name == optionName)?.Value;
-        }
+        public static object? GetOptionValue(SocketSlashCommand command, string optionName) =>
+            command.Data.Options.FirstOrDefault(x => x.Name == optionName)?.Value;
 
         /// <summary>
         /// Get a guild by its name
@@ -113,10 +122,8 @@ namespace DiscordBotFramework
         /// <param name="client"></param>
         /// <param name="guildName"></param>
         /// <returns>A SocketGuild or null</returns>
-        public static SocketGuild? GetGuildByName(DiscordSocketClient client, string guildName)
-        {
-            return client.Guilds.FirstOrDefault(x => x.Name == guildName);
-        }
+        public static SocketGuild? GetGuildByName(DiscordSocketClient client, string guildName) =>
+            client.Guilds.FirstOrDefault(x => x.Name == guildName);
 
         /// <summary>
         /// Get guild by its ID
@@ -124,10 +131,8 @@ namespace DiscordBotFramework
         /// <param name="client"></param>
         /// <param name="id"></param>
         /// <returns>A SocketGuild or null</returns>
-        public static SocketGuild? GetGuildById(DiscordSocketClient client, ulong id)
-        {
-            return client.Guilds.FirstOrDefault(x => x.Id == id);
-        }
+        public static SocketGuild? GetGuildById(DiscordSocketClient client, ulong id) =>
+            client.Guilds.FirstOrDefault(x => x.Id == id);
 
         /// <summary>
         /// Get a SocketGuildUser by Id
@@ -135,10 +140,8 @@ namespace DiscordBotFramework
         /// <param name="guild"></param>
         /// <param name="userId"></param>
         /// <returns>A SocketGuildUser or null</returns>
-        public static SocketGuildUser? GetGuildUserById(SocketGuild guild,  ulong userId)
-        {
-            return guild.Users.FirstOrDefault(x => x.Id == userId);
-        }
+        public static SocketGuildUser? GetGuildUserById(SocketGuild guild,  ulong userId)=>
+            guild.Users.FirstOrDefault(x => x.Id == userId);
 
         /// <summary>
         /// Get channel by its name
@@ -146,10 +149,8 @@ namespace DiscordBotFramework
         /// <param name="guild"></param>
         /// <param name="channelName"></param>
         /// <returns>An ISocketMessageChannel or null</returns>
-        public static ISocketMessageChannel? GetChannelByName(SocketGuild guild, string channelName)
-        {
-            return guild.Channels.FirstOrDefault(x => x.Name == channelName) as ISocketMessageChannel;
-        }
+        public static ISocketMessageChannel? GetChannelByName(SocketGuild guild, string channelName) =>
+            guild.Channels.FirstOrDefault(x => x.Name == channelName) as ISocketMessageChannel;
 
         /// <summary>
         /// Get channel by its ID
@@ -157,10 +158,17 @@ namespace DiscordBotFramework
         /// <param name="guild"></param>
         /// <param name="id"></param>
         /// <returns>An ISocketMessageChannel or null</returns>
-        public static ISocketMessageChannel? GetChannelById(SocketGuild guild, ulong id)
-        {
-            return guild.Channels.FirstOrDefault(x => x.Id == id) as ISocketMessageChannel;
-        }
+        public static ISocketMessageChannel? GetChannelById(SocketGuild guild, ulong id) =>
+            guild.Channels.FirstOrDefault(x => x.Id == id) as ISocketMessageChannel;
+
+        /// <summary>
+        /// Get role by its ID
+        /// </summary>
+        /// <param name="guild"></param>
+        /// <param name="id"></param>
+        /// <returns>A SocketRole or null</returns>
+        public static SocketRole? GetRoleById(SocketGuild guild, ulong id) =>
+            guild.Roles.FirstOrDefault(x => x.Id == id);
 
         /// <summary>
         /// Check if a user has a role by role ID
@@ -168,12 +176,8 @@ namespace DiscordBotFramework
         /// <param name="user"></param>
         /// <param name="roleId"></param>
         /// <returns></returns>
-        public static bool UserHasRole(SocketGuildUser user, ulong roleId)
-        {
-            if (user.Roles.FirstOrDefault(r => r.Id == roleId) != null)
-                return true;
-            return false;
-        }
+        public static bool UserHasRole(SocketGuildUser user, ulong roleId) =>
+            user.Roles.FirstOrDefault(r => r.Id == roleId) != null;
 
         /// <summary>
         /// Check if a user has a role by role name
@@ -181,12 +185,8 @@ namespace DiscordBotFramework
         /// <param name="user"></param>
         /// <param name="roleName"></param>
         /// <returns></returns>
-        public static bool UserHasRole(SocketGuildUser user, string roleName)
-        {
-            if (user.Roles.FirstOrDefault(r => r.Name == roleName) != null)
-                return true;
-            return false;
-        }
+        public static bool UserHasRole(SocketGuildUser user, string roleName) =>
+            user.Roles.FirstOrDefault(r => r.Name == roleName) != null;
 
         /// <summary>
         /// Check if a user has a permission
@@ -194,11 +194,7 @@ namespace DiscordBotFramework
         /// <param name="user"></param>
         /// <param name="permission"></param>
         /// <returns></returns>
-        public static bool UserHasPermission(SocketGuildUser user, GuildPermission permission)
-        {
-            if (user.GuildPermissions.Has(permission))
-                return true;
-            return false;
-        }
+        public static bool UserHasPermission(SocketGuildUser user, GuildPermission permission) =>
+            user.GuildPermissions.Has(permission);
     }
 }
