@@ -26,14 +26,34 @@ namespace DiscordBotFramework
                 .WithRequired(isRequired));
         }
 
+        /// <summary>
+        /// Add a parameter with predefined choices (shows dropdown)
+        /// </summary>
+        /// <param name="choices">Dictionary of display names to values e.g. { "Admin", "admin" }</param>
+        public void AddParamWithChoices(string name, string description, Dictionary<string, string> choices, bool isRequired = false)
+        {
+            var option = new SlashCommandOptionBuilder()
+                .WithName(name)
+                .WithDescription(description)
+                .WithType(ApplicationCommandOptionType.String)
+                .WithRequired(isRequired);
+
+            foreach (var choice in choices)
+                option.AddChoice(choice.Key, choice.Value);
+
+            _params.Add(option);
+        }
+
         internal SlashCommandProperties Build()
         {
             var commandBuilder = new SlashCommandBuilder()
                 .WithName(CommandName)
                 .WithDescription(Description);
+
             if (_params.Count() > 0)
                 foreach (var param in _params)
                     commandBuilder.AddOption(param);
+
             return commandBuilder.Build();
         }
     }
